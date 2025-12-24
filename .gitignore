@@ -1,0 +1,46 @@
+# --- JAVA & MAVEN ---
+target/
+*.class
+*.jar
+*.war
+*.ear
+# NÃO ignore o maven-wrapper.jar para que o ./mvnw funcione em qualquer lugar
+
+# --- HOT TIPS (Segurança) ---
+.env
+.local.env
+application-dev.properties
+application-local.properties
+/out/
+
+# --- IDEs ---
+# IntelliJ
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse / STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# VS Code
+.vscode/
+
+# --- SISTEMA ---
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+
+# --- COMPACTADOS ---
+*.zip
+*.tar.gz
+*.rar
