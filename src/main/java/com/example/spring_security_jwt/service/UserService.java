@@ -1,4 +1,4 @@
-package com.example.spring_security_jwt.security;
+package com.example.spring_security_jwt.service;
 
 import com.example.spring_security_jwt.model.User;
 import com.example.spring_security_jwt.repository.UserRepository;
