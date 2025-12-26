@@ -6,7 +6,7 @@ import java.util.List;
 
 public class JWTObject {
     private String subject; // nome  do usuario
-    private Date issudAt; //data de criação do token
+    private Date IssuedAt; //data de criação do token
     private Date expiration; // data do token
     private static List<String> roles; // perfis de acesso
 
@@ -19,13 +19,13 @@ public class JWTObject {
         this.subject = subject;
     }
 
-    public Date getIssudAt() {
-        return issudAt;
+    public Date getIssuedAt() {
+        return IssuedAt;
     }
 
 
     public void setIssuedAt(Date issuedAt) {
-        this.issudAt = issudAt;
+        this.IssuedAt = IssuedAt;
 
     }
 
@@ -49,5 +49,6 @@ public class JWTObject {
     public void setRoles(String... roles){
          this.roles = Arrays.asList(roles);
      }
+
 
 }
