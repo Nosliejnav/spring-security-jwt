@@ -1,5 +1,7 @@
 package com.example.spring_security_jwt.security;
 
+import org.apache.catalina.servlets.WebdavServlet;
+import org.h2.server.web.WebServlet;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,7 +54,15 @@ public class WebSecurityConfig {
                         .requestMatchers("/managers").hasRole("MANAGERS")
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
+
+//    @Bean //HABILITANDO O ACESSO DO H2 CONSOLE NA WEB
+//    public ServletRegistrationBean h2servletRegistration(){
+//        ServletRegistrationBean registrationBean = new ServletRegistrationBean(new WebServlet());
+//        registrationBean.addUrlMappings("/h2-console/*");
+//        return registrationBean;
+//    }
 }

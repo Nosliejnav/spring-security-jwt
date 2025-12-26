@@ -30,36 +30,31 @@ public class JWTFilter extends OncePerRequestFilter {
         String header = request.getHeader(JWTCreator.HEADER_AUTHORIZATION);
 
         try {
-            // ✅ NÃO existe token → segue a requisição
-            if (header == null || !header.startsWith(SecurityConfig.PREFIX)) {
-                filterChain.doFilter(request, response);
-                return;
+            if (header != null && header.startsWith(SecurityConfig.PREFIX)) {
+                // 🔐 Token existe e começa com "Bearer "
+                JWTObject tokenObject = JWTCreator.create(header, SecurityConfig.PREFIX, SecurityConfig.KEY);
+
+                List<SimpleGrantedAuthority> authorities = tokenObject.getRoles().stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                        .collect(Collectors.toList());
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                tokenObject.getSubject(),
+                                null,
+                                authorities
+                        );
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                // ✅ NÃO existe token ou formato inválido -> limpa contexto
+                SecurityContextHolder.clearContext();
             }
-
-            // 🔐 Token existe e começa com "Bearer "
-            JWTObject tokenObject =
-                    JWTCreator.create(header, SecurityConfig.PREFIX);
-
-            List<SimpleGrantedAuthority> authorities =
-                    tokenObject.getRoles()
-                            .stream()
-                            .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList());
-
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            tokenObject.getSubject(),
-                            null,
-                            authorities
-                    );
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            filterChain.doFilter(request, response);
-
-        } catch (ExpiredJwtException e) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        } catch (UnsupportedJwtException | MalformedJwtException | SignatureException e) {
-            response.setStatus(HttpStatus.FORBIDDEN.value());
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException e) {
+            // ⚠️ Token inválido: apenas limpa o contexto e segue como anônimo.
+            SecurityContextHolder.clearContext();
         }
+
+        filterChain.doFilter(request, response);
     }
 }
